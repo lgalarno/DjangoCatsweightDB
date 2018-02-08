@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Select{% endblock %}
+
+{% block content %}
+    <p>Select what you want to see:</p>
+        <form action="{% url 'tables:SelectView' %}" method="post">
+            {%csrf_token%}
+                {% for error in form.non_field_errors %}
+                    <div class="form-group has-errors text-danger small">
+                        {{error}}
+                    </div>
+                {% endfor %}
+            <div class="row">
+                {% for field in form %}
+                    <div class="col">
+                        <div class="form-group">
+                            {{ field.label }}<br>{{field}}
+                        </div>
+                        <div class="form-group has-errors text-danger small">
+                            {{field.errors}}
+                        </div>
+                        <div class="form-group has-errors text-danger small">
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div><!–– row ––>
+        <div>
+        <button type="submit" name="submitbtn" value="CSV" title="CSV"><i class="fas fa-file-excel"></i>CSV</button>
+        <button type="submit" name="submitbtn" value="Chart" title="Chart"><i class="fas fa-chart-line"></i>Chart</button>
+        <button type="submit" name="submitbtn" value="Table" title="Table"><i class="fas fa-table"></i>Table</button>
+        </div>
+        </form>
+    <script src="{% static 'js/datepicker.js' %}"></script>
+{% endblock %}

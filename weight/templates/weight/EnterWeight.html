@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}New day, new weight{% endblock %}
+
+{% block content %}
+    <h2>{{ gamecategory }}</h2>
+    <p>Select the cats, enter the weights in pounds and press 'GO'</p>
+
+    {% if cats %}
+    <form action="{% url 'weight:WeightConfirm' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            {% for cat in cats %}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" name="selectc" id="selectc-{{ cat.id }}" value="{{ cat.id }}" onclick="disableSelect(this.id)" checked>
+                            <label for="selectc-{{ cat.id }}" style="width: 100px">{{ cat.name }}</label>
+                        </div>
+                    </div>
+                    <input  type="number" min="0" max="40" required value="0" name='cweigth' id="cweigth-{{ cat.id }}" >
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col"
+            <p>Date <input type="text" class="datepick" id="datepicker" name="getdate" required="required"></p>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-success" value="GO"/>
+    </form>
+    {% else %}
+        <p>No active cat(s) in the database. Please add some.</p>
+    {% endif %}
+    <script src="{% static 'js/datepicker.js' %}"></script>
+    <script src="{% static 'weight/js/activecats.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Confirm{% endblock %}
+
+{% block content %}
+    <p>Confirm the entry into the database ?</p>
+    <form action="{% url 'weight:SaveWeight' %}"method="post">{% csrf_token %}
+        <table class="table">
+            <thead>
+            <tr>
+                {% for s in header %}
+                    <th scope="col">{{ s }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <input type="hidden" name="getdate" value="{{ mdate }}"/>
+                <th>Date</th>
+                <th>{{ mdate }}</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            {% for c,w in zipped %}
+                <input type="hidden" name="selectedc" value="{{ c.id }}"/>
+                <input type="hidden" name="cweight" value="{{ w }}"/>
+                <tr>
+                    <td>{{ c.name }}</td>
+                    <td>{{ w }} lb{{ w|pluralize }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-success" value="Confirm" />
+    </form>
+{% endblock %}

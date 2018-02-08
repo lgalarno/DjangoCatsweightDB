@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}index{% endblock %}
+
+{% block content %}
+{% if object_list %}
+    <div class="row">
+        <h3><b>Current cats</b></h3>
+    </div>
+    <div class="row">
+    {% for cat in object_list %}
+        <div class="card" style="width: 18rem;">
+            {% if cat.picture %}
+                <img class="card-img-top" title="Detail" src="{{ cat.picture.url }}" alt="Card image cap">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title"><a class="" href="{{ cat.get_absolute_url }}" title="Detail">{{ cat.name }}</a></h5>
+                <!-- View Details -->
+                <a href="{{ cat.get_absolute_url }}" class="btn btn-secondary btn-sm" role="button">
+                    <i class="fas fa-info-circle" title="Detail"></i>
+                </a>
+                <!-- Update Player -->
+                <a href="{% url 'CatsManagement:CatUpdateView' id=cat.id slug=cat.slug %}" class="btn btn-secondary btn-sm" role="button">
+                    <i class="fas fa-edit" title="Edit"></i>
+                </a>
+                <!-- Delete cat -->
+                <a href="{% url 'CatsManagement:CatDeleteView' id=cat.id slug=cat.slug %}" class="btn btn-secondary btn-sm" role="button">
+                    <i class="fas fa-trash-alt" title="Delete"></i>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+<!-- Add Player -->
+<div class="col">
+    <a href="{% url 'CatsManagement:CreateCatView' %}" class="btn btn-secondary" role="button">
+        <i class="fas fa-plus-square fa-w-14 fa-2x" title="Add a New Cat"></i>
+    </a>
+</div>
+</div>
+{% endblock %}

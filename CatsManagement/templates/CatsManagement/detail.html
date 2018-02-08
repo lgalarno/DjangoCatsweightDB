@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% block title %}{{ cat.name }}{% endblock %}
+
+{% block content %}
+    <div class="card" style="width: 24rem;">
+        {% if cat.picture %}
+            <img class="card-img-top" title="Detail" src="{{ cat.picture.url }}" alt="Card image cap">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ cat.name }}</h5>
+            {% if cat.birth %}
+                <p>Age: {{ cat.age }} year{{ cat.age|pluralize }}</p>
+            {% endif %}
+            <p class="card-text">{{ cat.description }}</p>
+            <p>{% if cat.active %}Active{% else %}Inactive{% endif %}</p>
+            <p><small>Created: {% localtime on %}{{ cat.timestamp }}{% endlocaltime %}</small></p>
+            <!-- Update Player -->
+            <a href="{% url 'CatsManagement:CatUpdateView' id=cat.id slug=cat.slug %}" class="btn btn-secondary btn-sm" role="button">
+                <i class="fas fa-edit fa-2x" title="Edit"></i>
+            </a>
+            <!-- Delete Player -->
+            <a href="{% url 'CatsManagement:CatDeleteView' id=cat.id slug=cat.slug %}" class="btn btn-secondary btn-sm" role="button">
+                <i class="fas fa-trash-alt fa-2x" title="Delete"></i>
+            </a>
+        </div>
+    </div>
+{% endblock %}

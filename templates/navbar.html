@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+    <a class="navbar-brand" href="/"><img src="//getbootstrap.com/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">LG Cats Weight DB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'CatsManagement:CatsListView' %}">Cats Management</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'weight:EnterWeight' %}">New Measurement</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tables</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown02">
+                    <a class="dropdown-item" title="Select by date and cat" href="{% url 'tables:SelectView' %}" >Select</a>
+                    <a class="dropdown-item" title="table in the browser" href="{% url 'tables:WebtablesView' %}" >All</a>
+                    <a class="dropdown-item" title="table in csv" href="{% url 'tables:csvweb' %}" >CSV</a>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          {% if request.user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% endif %}
+        </ul>
+
+        {% if not request.user.is_authenticated and not "login" in request.get_full_path %}
+        <form class="form-inline my-2 my-lg-0" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% if request.GET.next %}{{ request.GET.next }}{% else %}/{% endif %}" />
+            <div class="form-group">
+                <input class="form-control mr-sm-2" type="text" name='username' placeholder='Username'>
+            </div>
+            <div class="form-group">
+                <input class="form-control mr-sm-2" type="password" name='password' placeholder='Password'>
+            </div>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign in</button>
+        </form>
+        {% endif %}
+    </div>
+</nav>

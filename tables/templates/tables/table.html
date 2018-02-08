@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<form action="{% url 'tables:WebtablesView' %}" method="post">{%csrf_token%}
+    <div class="row">
+    <div class="col">
+    <h3>{{ title }}</h3>
+        <table class="table">
+          <thead>
+            <tr>
+            <th scope="col"><input type="checkbox" name="selectall" id="selectall" value="all" onclick="SelectAll();">
+                <label for="selectall" style="width: 100px">select all</label>
+            </th>
+                {% for s in headermain %}
+                    <th scope="col">{{ s }}</th>
+                {% endfor %}
+            </tr>
+          </thead>
+            <tbody>
+            {% for k, r in maintable.items %}
+                <tr>
+                    <td>
+                    <input type="checkbox" name="selectw" id="selectw-{{ k }}" value="{{ k }}">
+                    </td>
+                    {% for s in r %}
+                        <td>{{ s }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col">
+    <h3>{{ stable_title }}</h3>
+        <table class="table">
+          <thead>
+            <tr>
+                {% for s in headerst %}
+                    <th scope="col">{{ s }}</th>
+                {% endfor %}
+            </tr>
+          </thead>
+            <tbody>
+            {% for r in summarytable %}
+                <tr>
+                    {% for s in r %}
+                        <td>{{ s }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div><!–– row ––>
+    <div>
+        <button type="submit" name="submitbtn" value="Delete" title="Delete"><i class="far fa-trash-alt" ></i>Delete</button>
+        <button type="submit" name="submitbtn" value="CSV" title="CSV"><i class="fas fa-file-excel"></i>CSV</button>
+        <button type="submit" name="submitbtn" value="Chart" title="Chart"><i class="fas fa-chart-line"></i>Chart</button>
+        <button type="submit" name="submitbtn" value="Redraw" title="Redraw"><i class="fas fa-redo-alt"></i>Redraw</button>
+    </div>
+</form>
+    <script src="{% static 'tables/js/selectall.js' %}"></script>
+{% endblock %}

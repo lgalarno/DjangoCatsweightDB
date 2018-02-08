@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Success{% endblock %}
+
+{% block content %}
+    <p>The folllowing:</p>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                {% for s in header %}
+                    <th scope="col">{{ s }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for c,w in measurments.items %}
+                <tr>
+                    <td>{{ c }}</td>
+                    <td>{{ w }} lb{{ w|pluralize }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-success">measurement #{{ mnumber }}</li>
+            <li class="list-group-item list-group-item-success">{{ date }}</li>
+        </ul>
+    </div>
+    <p>was successfully entered in the database!</p>
+{% endblock %}
+
+

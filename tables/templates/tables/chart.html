@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load format_for_google %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div id="line_chart" style="width: 900px; height: 500px">
+
+    </div>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1.1', {packages:['corechart']});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            {% for c in chartcol %}
+                data.addColumn('number', '{{ c }}');
+            {% endfor %}
+            {% for k, v in data.items %}
+                data.addRow({{ v|safe|format_for_google }});
+            {% endfor %}
+            var options = {
+                title: '{{ charttitle }}',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                interpolateNulls:'true'
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
+            chart.draw(data, options);
+            console.log(data.toString())
+        }
+    </script>
+{% endblock %}

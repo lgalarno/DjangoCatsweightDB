@@ -14,7 +14,6 @@ urlpatterns = [
     path('table/', include('tables.urls', namespace="tables")),
     path('weight/', include('weight.urls', namespace="weight")),
     path('', TemplateView.as_view(template_name="index.html")),
-    path('formtest', TemplateView.as_view(template_name='formtest.html')),
 ]
 
 if settings.DEBUG:

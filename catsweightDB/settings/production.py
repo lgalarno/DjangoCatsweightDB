@@ -24,7 +24,7 @@ SECRET_KEY = '=11ilv6_jn(d&w(p7e2j@!mdg54iupu-85wza6%k*r+*3=9-^5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.20.80', 'localhost', '127.0.0.1', 'lgalarno.dlinkddns.com']
 
 
 # Application definition
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'catsweightDB.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lgalarno$dartsDBweb',
+        'NAME': 'catsweightDBb',
         'USER': 'lgalarno',
         'PASSWORD': 's3n10r3lc0c0',
         'HOST': 'lgalarno.mysql.pythonanywhere-services.com',

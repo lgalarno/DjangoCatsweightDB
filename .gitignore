@@ -3,6 +3,7 @@ venv
 staticfiles
 db.sqlite3
 catsweightDB/settings/local.py
+catsweightDB/settings/secrets.py
 .idea
 
 # Byte-compiled / optimized / DLL files

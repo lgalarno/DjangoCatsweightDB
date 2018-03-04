@@ -7,21 +7,23 @@ import os
 import csv
 
 from CatsManagement.models import Cat
-from .maketables import WriteTables, WriteTablesNew
+from .maketables import WriteTablesNew
 from .forms import SelectCatsForm
 from weight.models import Measure, Participant
 
 class WebtablesView(View):
     template_name = "tables/table.html"
     def get(self, request):
-        headerwt, wt, headerst, st = WriteTablesNew(self.request, gdate = False)
-        context = {'title': 'Measures',
-                   'headermain': headerwt,
-                   'headerst': headerst,
-                   'maintable': wt,
-                   'summarytable': st,
-                   'stable_title': 'Average weights'}
-        return render(request, "tables/table.html", context)
+        if is_db_not_empty(request):
+            headerwt, wt, headerst, st = WriteTablesNew(self.request, gdate = False)
+            context = {'title': 'Measures',
+                       'headermain': headerwt,
+                       'headerst': headerst,
+                       'maintable': wt,
+                       'summarytable': st,
+                       'stable_title': 'Average weights'}
+            return render(request, "tables/table.html", context)
+        return redirect('/')
 
     def post(self, request):
         requestdict = dict(request.POST)
@@ -50,20 +52,22 @@ class WebtablesView(View):
             return redirect('tables:ChartView')
 
 def csvweb(request):
-    headerwt,wt,headerst,st =  WriteTablesNew(request, gdate = False)
-    datesuffix = datetime.datetime.now().strftime('_%Y_%m_%d')
-    fn = 'CatsWeight' + datesuffix
-    # Create the HttpResponse object with the appropriate CSV header.
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(fn)
-    writer = csv.writer(response)
-    writer.writerow(headerwt)
-    writer.writerows(wt.values())
-    writer.writerows([''])
-    writer.writerow(headerst)
-    writer.writerows(st)
-    writer.writerows([''])
-    return response
+    if is_db_not_empty(request):
+        headerwt,wt,headerst,st =  WriteTablesNew(request, gdate = False)
+        datesuffix = datetime.datetime.now().strftime('_%Y_%m_%d')
+        fn = 'CatsWeight' + datesuffix
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={0}'.format(fn)
+        writer = csv.writer(response)
+        writer.writerow(headerwt)
+        writer.writerows(wt.values())
+        writer.writerows([''])
+        writer.writerow(headerst)
+        writer.writerows(st)
+        writer.writerows([''])
+        return response
+    return redirect('/')
 
 class SelectView(View):
     form_class = SelectCatsForm
@@ -99,19 +103,21 @@ class SelectView(View):
 
 class ChartView(TemplateView):
     template_name = "tables/chart.html"
-
     def get_context_data(self, **kwargs):
-        headerwt, wt, headerst, st = WriteTablesNew(self.request, gdate = True)
-        chartcol= headerwt[1:]
-        # weights = [l[2:] for l in wt]
-        # dates = [l[1] for l in wt]
-        #data = [l[1:] for l in wt]
+        if is_db_not_empty(self.request):
+            headerwt, wt, headerst, st = WriteTablesNew(self.request, gdate = True)
+            chartcol= headerwt[1:]
+            # weights = [l[2:] for l in wt]
+            # dates = [l[1] for l in wt]
+            #data = [l[1:] for l in wt]
 
-        context = {'title': 'Chart',
-                   'charttitle':'Cats weight',
-                   'chartcol': chartcol,
-                   'data':wt
-                   }
+            context = {'title': 'Chart',
+                       'charttitle':'Cats weight',
+                       'chartcol': chartcol,
+                       'data':wt
+                       }
+        else:
+            context = {}
         return context
 # class select(View):
 #     def get(self, request):
@@ -137,3 +143,9 @@ class ChartView(TemplateView):
 #
 #         request.session['selection'] = True
 #         return HttpResponseRedirect(reverse('tables:webtables'))
+
+def is_db_not_empty(request):
+    if Measure.objects.all().count():
+        return True
+    messages.warning(request, "The database is empty")
+    return False

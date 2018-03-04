@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=11ilv6_jn(d&w(p7e2j@!mdg54iupu-85wza6%k*r+*3=9-^5'
+SECRET_KEY = os.getenv('CATS_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'catsweightDB.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'catsweightDBb',
+        'NAME': 'catsweightDB',
         'USER': 'lgalarno',
-        'PASSWORD': 's3n10r3lc0c0',
+        'PASSWORD': os.getenv('LG_CATS_DB_PASS'),
         'HOST': 'lgalarno.mysql.pythonanywhere-services.com',
     },
 }

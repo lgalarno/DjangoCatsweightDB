@@ -9,54 +9,55 @@ from .simplestats import mean, pstdev
 def main():
     WriteTables('All', [12,13])
 
-def WriteTables(request, gdate = False):
-    wt = []
-    session = request.session
-    datefrom = Measure.objects.order_by('-date').last().date
-    dateto = datetime.datetime.now().date()
-    if request.session['selection']:
-        catsset = session.get('selectc', None)
-        # datefrom = session.get('fromdate', None)
-        # print(datefrom)
-        # if datefrom:
-        #     print(datefrom)
-        #     datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d").date()
-        if session.get('todate') != "None":
-            dateto = session.get('todate')
-        if session.get('fromdate') != "None":
-            datefrom = session.get('fromdate')
-        request.session['selection'] = False
-    else:
-        allcats = Cat.objects.all()
-        catsset = [c.id for c in allcats]
-
-    qmeas = Measure.objects.filter(participant__cat__in=catsset,
-                                   date__lte=dateto,
-                                   date__gte=datefrom
-                                   ).distinct()
-    allcats = Cat.objects.filter(id__in=catsset)
-    catsmeasured = [c for c in allcats]
-    # distinct measure with selected cats (catsset)
-    # Measure.objects.filter(participant__cat__in=[12,13,14]).distinct()
-    # if 'All' in measureset:
-    #     qmeas = Measure.objects.all()
-    # else:
-    #     qmeas = Measure.objects.filter(id__in=measureset)
-
-
-    for m in qmeas:
-        weights = m.get_weigths()
-        mdate = m.date.strftime("%Y-%m-%d")
-        if gdate:
-            gdatelist = mdate.split('-')
-            "Date(Year, Month, Day)"
-            gdatelist[1] = str(int(gdatelist[1]) - 1)
-            mdate = "new Date({0}, {1}, {2})".format(m.date.year, m.date.month-1,m.date.day)#'new Date({0},{1},{2})'.format(*gdatelist)
-        wt.append([mdate] + _wranking(weights, catsmeasured))
-    st = _summary_table(wt,len(catsmeasured), 1) #1 for date
-    headerwt = ['Date'] + catsmeasured
-    headerst = [' '] + catsmeasured
-    return headerwt, wt, headerst, st
+# def WriteTables(request, gdate = False):
+#     wt = []
+#     session = request.session
+#     datefrom = Measure.objects.order_by('-date').last().date
+#     dateto = datetime.datetime.now().date()
+#     if request.session['selection']:
+#         catsset = session.get('selectc', None)
+#         # datefrom = session.get('fromdate', None)
+#         # print(datefrom)
+#         # if datefrom:
+#         #     print(datefrom)
+#         #     datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d").date()
+#         if session.get('todate') != "None":
+#             dateto = session.get('todate')
+#         if session.get('fromdate') != "None":
+#             datefrom = session.get('fromdate')
+#         request.session['selection'] = False
+#     else:
+#         allcats = Cat.objects.all()
+#         catsset = [c.id for c in allcats]
+#
+#     qmeas = Measure.objects.filter(participant__cat__in=catsset,
+#                                    date__lte=dateto,
+#                                    date__gte=datefrom
+#                                    ).distinct()
+#     allcats = Cat.objects.filter(id__in=catsset)
+#     catsmeasured = [c for c in allcats]
+#     # distinct measure with selected cats (catsset)
+#     # Measure.objects.filter(participant__cat__in=[12,13,14]).distinct()
+#     # if 'All' in measureset:
+#     #     qmeas = Measure.objects.all()
+#     # else:
+#     #     qmeas = Measure.objects.filter(id__in=measureset)
+#
+#
+#     for m in qmeas:
+#         weights = m.get_weigths()
+#         mdate = m.date.strftime("%Y-%m-%d")
+#         if gdate:
+#             gdatelist = mdate.split('-')
+#             "Date(Year, Month, Day)"
+#             gdatelist[1] = str(int(gdatelist[1]) - 1)
+#             mdate = "new Date({0}, {1}, {2})".format(m.date.year, m.date.month-1,m.date.day)#'new Date({0},{1},{2})'.format(*gdatelist)
+#         wt.append([mdate] + _wranking(weights, catsmeasured))
+#
+#     st = _summary_table(wt,len(catsmeasured), 1) #1 for date
+#     headerwt = ['Date'] + catsmeasured
+#     headerst = [' '] + catsmeasured
+#     return headerwt, wt, headerst, st
 
 def WriteTablesNew(request, gdate = False):
 
@@ -131,7 +132,7 @@ def _wranking(weigths, cats):
 
 def _summary_table_new(dict,m, n):
     '''
-        ll is a list of lists from the build_table function
+        dict is a dict from the build_table function
         m is the number of individuals
         n is the number of columns to skip
         This function will create a summary table with the average weigths

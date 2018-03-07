@@ -9,23 +9,23 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('CATS_SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.20.80', 'localhost', '127.0.0.1', 'lgalarno.dlinkddns.com']
+DEBUG = bool(int(os.getenv('DEBUG', False)))
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else []
 
 # Application definition
 
@@ -80,11 +80,12 @@ WSGI_APPLICATION = 'catsweightDB.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'catsweightDB',
-        'USER': 'lgalarno',
-        'PASSWORD': os.getenv('LG_CATS_DB_PASS'),
-        'HOST': 'lgalarno.mysql.pythonanywhere-services.com',
+        'ENGINE': os.getenv('DATABASE_ENGINE'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'NAME': os.getenv('DATABASE_NAME'),
     },
 }
 

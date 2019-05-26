@@ -5,7 +5,7 @@ db.sqlite3
 catsweightDB/settings/local.py
 catsweightDB/settings/secrets.py
 .idea
-.env.lgserver2
+.env.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
